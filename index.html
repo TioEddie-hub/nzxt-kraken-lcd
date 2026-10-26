@@ -3,20 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>NZXT Dual Bars - Fluid Edition</title>
+  <title>NZXT Dual Bars - Full Width Fluid</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@700;800;900&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg: #000000;
-      --track-bg: #444955;
-      --cpu-bar-from: #00ff66;
-      --cpu-bar-to: #00ffcc;
-      --cpu-glow: rgba(0, 255, 120, 0.45);
-      --gpu-bar-from: #ff0055;
-      --gpu-bar-to: #ff3377;
-      --gpu-glow: rgba(255, 0, 85, 0.45);
+      --track-bg: #323742;
+      --cpu-from: #00ff66;
+      --cpu-to: #00ffcc;
+      --cpu-glow: rgba(0, 255, 120, 0.4);
+      --gpu-from: #ff0055;
+      --gpu-to: #ff3377;
+      --gpu-glow: rgba(255, 0, 85, 0.4);
       --text-white: #ffffff;
     }
 
@@ -40,7 +40,7 @@
       align-items: center;
     }
 
-    /* Tela física 240x240 px */
+    /* Tela física 240x240 */
     .viewport {
       width: 240px;
       height: 240px;
@@ -48,58 +48,89 @@
       position: relative;
       overflow: hidden;
       display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    /* Container central no layout exato do preset NZXT */
-    .hud-grid {
-      width: 212px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-    }
-
-    /* Coluna da Esquerda: Barras e Rótulos */
-    .bars-column {
-      flex: 1;
-      display: flex;
       flex-direction: column;
       justify-content: center;
+      align-items: center;
     }
 
+    /* Container central alinhado exatamente ao print de referência */
+    .hud-container {
+      width: 196px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* Linhas de Informação (Acima da barra da CPU e Abaixo da barra da GPU) */
+    .info-row {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      padding: 0 4px;
+    }
+
+    .info-row.bottom-row {
+      align-items: flex-start;
+      margin-top: -2px;
+    }
+
+    .info-row.top-row {
+      margin-bottom: -2px;
+    }
+
+    /* Rótulos CPU / GPU */
     .label {
-      font-size: 11px;
+      font-size: 13px;
       font-weight: 800;
-      letter-spacing: 0.8px;
+      letter-spacing: 1.5px;
       color: var(--text-white);
       text-transform: uppercase;
       line-height: 1;
     }
 
-    .cpu-label {
-      margin-bottom: 5px;
-      padding-left: 2px;
+    .top-row .label {
+      margin-bottom: 8px;
     }
 
-    .gpu-label {
-      margin-top: 5px;
-      padding-left: 2px;
+    .bottom-row .label {
+      margin-top: 8px;
     }
 
-    /* Trilho da Barra (Pill Shape) */
+    /* Números GIGANTES ampliados para 64px */
+    .temp-group {
+      display: flex;
+      align-items: flex-start;
+      line-height: 0.82;
+    }
+
+    .temp-number {
+      font-size: 64px;
+      font-weight: 900;
+      letter-spacing: -3px;
+      color: var(--text-white);
+      font-variant-numeric: tabular-nums;
+      text-shadow: 0 0 16px rgba(255, 255, 255, 0.25);
+    }
+
+    .temp-deg {
+      font-size: 20px;
+      font-weight: 800;
+      margin-top: 3px;
+      margin-left: 2px;
+      color: var(--text-white);
+      opacity: 0.9;
+    }
+
+    /* Trilho da Barra (Início ao Fim da largura útil) */
     .bar-track {
       width: 100%;
-      height: 11px;
+      height: 12px;
       background-color: var(--track-bg);
       border-radius: 999px;
       position: relative;
       overflow: hidden;
-    }
-
-    .cpu-track {
-      margin-bottom: 4px;
+      margin: 2px 0;
     }
 
     /* Preenchimento Fluido com Gradiente Animado */
@@ -114,15 +145,15 @@
 
     /* Barra CPU: Verde Neon Fluido */
     .cpu-fill {
-      background-image: linear-gradient(90deg, var(--cpu-bar-from), var(--cpu-bar-to), var(--cpu-bar-from));
-      box-shadow: 0 0 10px var(--cpu-glow);
+      background-image: linear-gradient(90deg, var(--cpu-from), var(--cpu-to), var(--cpu-from));
+      box-shadow: 0 0 12px var(--cpu-glow);
       animation: fluidShimmer 3.5s ease-in-out infinite;
     }
 
     /* Barra GPU: Magenta/Rosa Fluido */
     .gpu-fill {
-      background-image: linear-gradient(90deg, var(--gpu-bar-from), var(--gpu-bar-to), var(--gpu-bar-from));
-      box-shadow: 0 0 10px var(--gpu-glow);
+      background-image: linear-gradient(90deg, var(--gpu-from), var(--gpu-to), var(--gpu-from));
+      box-shadow: 0 0 12px var(--gpu-glow);
       animation: fluidShimmer 3.5s ease-in-out infinite 1.7s;
     }
 
@@ -132,67 +163,36 @@
       50% { background-position: 100% 50%; }
       100% { background-position: 0% 50%; }
     }
-
-    /* Coluna da Direita: Números Gigantes */
-    .numbers-column {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 2px;
-    }
-
-    .temp-item {
-      display: flex;
-      align-items: flex-start;
-      line-height: 0.85;
-    }
-
-    .temp-digits {
-      font-size: 58px;
-      font-weight: 900;
-      letter-spacing: -2px;
-      color: var(--text-white);
-      font-variant-numeric: tabular-nums;
-      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.9);
-    }
-
-    .temp-deg {
-      font-size: 16px;
-      font-weight: 800;
-      margin-top: 4px;
-      margin-left: 1px;
-      color: var(--text-white);
-      opacity: 0.9;
-    }
   </style>
 </head>
 <body>
 
   <div class="viewport">
-    <div class="hud-grid">
-      <!-- Coluna Esquerda: Barras Fluidas -->
-      <div class="bars-column">
-        <div class="label cpu-label">CPU</div>
-        
-        <div class="bar-track cpu-track">
-          <div id="cpu-fill" class="bar-fill cpu-fill"></div>
-        </div>
-
-        <div class="bar-track gpu-track">
-          <div id="gpu-fill" class="bar-fill gpu-fill"></div>
-        </div>
-
-        <div class="label gpu-label">GPU</div>
-      </div>
-
-      <!-- Coluna Direita: Números Gigantes no padrão NZXT -->
-      <div class="numbers-column">
-        <div class="temp-item">
-          <span id="cpu-num" class="temp-digits">--</span>
+    <div class="hud-container">
+      <!-- Linha Superior (Acima da Barra da CPU): Rótulo CPU à esquerda e Número Gigante à direita -->
+      <div class="info-row top-row">
+        <span class="label">CPU</span>
+        <div class="temp-group">
+          <span id="cpu-num" class="temp-number">--</span>
           <span class="temp-deg">°</span>
         </div>
-        <div class="temp-item">
-          <span id="gpu-num" class="temp-digits">--</span>
+      </div>
+
+      <!-- Barra da CPU de Ponta a Ponta -->
+      <div class="bar-track">
+        <div id="cpu-fill" class="bar-fill cpu-fill"></div>
+      </div>
+
+      <!-- Barra da GPU de Ponta a Ponta -->
+      <div class="bar-track">
+        <div id="gpu-fill" class="bar-fill gpu-fill"></div>
+      </div>
+
+      <!-- Linha Inferior (Abaixo da Barra da GPU): Rótulo GPU à esquerda e Número Gigante à direita -->
+      <div class="info-row bottom-row">
+        <span class="label">GPU</span>
+        <div class="temp-group">
+          <span id="gpu-num" class="temp-number">--</span>
           <span class="temp-deg">°</span>
         </div>
       </div>
@@ -243,7 +243,7 @@
       }
     };
 
-    // Modo Mock
+    // Modo Mock para testes locais
     setTimeout(() => {
       if (!camConnected) {
         function mockCycle() {

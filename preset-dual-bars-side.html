@@ -1,0 +1,263 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>NZXT Dual Bars - Fluid Edition</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #000000;
+      --track-bg: #444955;
+      --cpu-bar-from: #00ff66;
+      --cpu-bar-to: #00ffcc;
+      --cpu-glow: rgba(0, 255, 120, 0.45);
+      --gpu-bar-from: #ff0055;
+      --gpu-bar-to: #ff3377;
+      --gpu-glow: rgba(255, 0, 85, 0.45);
+      --text-white: #ffffff;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      background-color: #000000;
+      color: #ffffff;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* Tela física 240x240 px */
+    .viewport {
+      width: 240px;
+      height: 240px;
+      background-color: #000000;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* Container central no layout exato do preset NZXT */
+    .hud-grid {
+      width: 212px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    /* Coluna da Esquerda: Barras e Rótulos */
+    .bars-column {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .label {
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.8px;
+      color: var(--text-white);
+      text-transform: uppercase;
+      line-height: 1;
+    }
+
+    .cpu-label {
+      margin-bottom: 5px;
+      padding-left: 2px;
+    }
+
+    .gpu-label {
+      margin-top: 5px;
+      padding-left: 2px;
+    }
+
+    /* Trilho da Barra (Pill Shape) */
+    .bar-track {
+      width: 100%;
+      height: 11px;
+      background-color: var(--track-bg);
+      border-radius: 999px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cpu-track {
+      margin-bottom: 4px;
+    }
+
+    /* Preenchimento Fluido com Gradiente Animado */
+    .bar-fill {
+      height: 100%;
+      width: 0%;
+      border-radius: 999px;
+      transition: width 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
+      position: relative;
+      background-size: 200% 100%;
+    }
+
+    /* Barra CPU: Verde Neon Fluido */
+    .cpu-fill {
+      background-image: linear-gradient(90deg, var(--cpu-bar-from), var(--cpu-bar-to), var(--cpu-bar-from));
+      box-shadow: 0 0 10px var(--cpu-glow);
+      animation: fluidShimmer 3.5s ease-in-out infinite;
+    }
+
+    /* Barra GPU: Magenta/Rosa Fluido */
+    .gpu-fill {
+      background-image: linear-gradient(90deg, var(--gpu-bar-from), var(--gpu-bar-to), var(--gpu-bar-from));
+      box-shadow: 0 0 10px var(--gpu-glow);
+      animation: fluidShimmer 3.5s ease-in-out infinite 1.7s;
+    }
+
+    /* Shimmer líquido suave no interior da barra */
+    @keyframes fluidShimmer {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* Coluna da Direita: Números Gigantes */
+    .numbers-column {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 2px;
+    }
+
+    .temp-item {
+      display: flex;
+      align-items: flex-start;
+      line-height: 0.85;
+    }
+
+    .temp-digits {
+      font-size: 58px;
+      font-weight: 900;
+      letter-spacing: -2px;
+      color: var(--text-white);
+      font-variant-numeric: tabular-nums;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.9);
+    }
+
+    .temp-deg {
+      font-size: 16px;
+      font-weight: 800;
+      margin-top: 4px;
+      margin-left: 1px;
+      color: var(--text-white);
+      opacity: 0.9;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="viewport">
+    <div class="hud-grid">
+      <!-- Coluna Esquerda: Barras Fluidas -->
+      <div class="bars-column">
+        <div class="label cpu-label">CPU</div>
+        
+        <div class="bar-track cpu-track">
+          <div id="cpu-fill" class="bar-fill cpu-fill"></div>
+        </div>
+
+        <div class="bar-track gpu-track">
+          <div id="gpu-fill" class="bar-fill gpu-fill"></div>
+        </div>
+
+        <div class="label gpu-label">GPU</div>
+      </div>
+
+      <!-- Coluna Direita: Números Gigantes no padrão NZXT -->
+      <div class="numbers-column">
+        <div class="temp-item">
+          <span id="cpu-num" class="temp-digits">--</span>
+          <span class="temp-deg">°</span>
+        </div>
+        <div class="temp-item">
+          <span id="gpu-num" class="temp-digits">--</span>
+          <span class="temp-deg">°</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const elCpuNum = document.getElementById('cpu-num');
+    const elGpuNum = document.getElementById('gpu-num');
+    const elCpuFill = document.getElementById('cpu-fill');
+    const elGpuFill = document.getElementById('gpu-fill');
+
+    let camConnected = false;
+
+    // Escala de temperatura nas barras: 25°C a 85°C
+    function calcRatio(temp) {
+      const min = 25;
+      const max = 85;
+      const clamped = Math.max(min, Math.min(max, temp));
+      return ((clamped - min) / (max - min)) * 100;
+    }
+
+    function renderData(data) {
+      if (!data) return;
+
+      const cpu = data.cpus?.[0];
+      if (cpu && cpu.temperature !== undefined) {
+        const temp = Math.round(cpu.temperature);
+        elCpuNum.textContent = temp;
+        elCpuFill.style.width = `${calcRatio(temp)}%`;
+      }
+
+      const gpu = data.gpus?.[0];
+      if (gpu && gpu.temperature !== undefined) {
+        const temp = Math.round(gpu.temperature);
+        elGpuNum.textContent = temp;
+        elGpuFill.style.width = `${calcRatio(temp)}%`;
+      }
+    }
+
+    // Integração oficial NZXT CAM
+    window.nzxt = {
+      v1: {
+        onMonitoringDataUpdate: (data) => {
+          camConnected = true;
+          renderData(data);
+        }
+      }
+    };
+
+    // Modo Mock
+    setTimeout(() => {
+      if (!camConnected) {
+        function mockCycle() {
+          if (camConnected) return;
+          renderData({
+            cpus: [{ temperature: 48 + Math.floor(Math.random() * 5) }],
+            gpus: [{ temperature: 53 + Math.floor(Math.random() * 6) }]
+          });
+        }
+
+        mockCycle();
+        setInterval(mockCycle, 1500);
+      }
+    }, 1200);
+  </script>
+</body>
+</html>
