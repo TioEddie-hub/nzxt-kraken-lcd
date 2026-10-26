@@ -1,0 +1,314 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>NZXT Kraken 360 LCD</title>
+  <style>
+    :root {
+      --bg: #0a0c10;
+      --cpu-color: #ff6a00;
+      --cpu-glow: rgba(255, 106, 0, 0.35);
+      --gpu-color: #00d4ff;
+      --gpu-glow: rgba(0, 212, 255, 0.35);
+      --text-dim: #768399;
+      --text-bright: #f0f4f8;
+      --border-color: #1e2638;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      background-color: #000000;
+      color: var(--text-bright);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* O display do Kraken RL-KR360-B1 tem resolução nativa de 240x240 */
+    .viewport {
+      width: 240px;
+      height: 240px;
+      position: relative;
+      background: radial-gradient(circle at center, #141a24 0%, #07090d 85%);
+      border-radius: 50%;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 14px;
+      border: 1px solid var(--border-color);
+      box-shadow: inset 0 0 25px rgba(0, 0, 0, 0.8);
+    }
+
+    .viewport::after {
+      content: "";
+      position: absolute;
+      inset: 2px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      pointer-events: none;
+    }
+
+    .header-bar {
+      margin-top: 4px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      z-index: 2;
+    }
+
+    .status-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: #888;
+      transition: background 0.3s;
+    }
+
+    .status-dot.active {
+      background: #00ff88;
+      box-shadow: 0 0 6px #00ff88;
+    }
+
+    .status-text {
+      font-size: 8px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: var(--text-dim);
+      text-transform: uppercase;
+    }
+
+    .telemetry-group {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      z-index: 2;
+    }
+
+    .metric-title {
+      font-size: 8px;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      color: var(--text-dim);
+      text-transform: uppercase;
+    }
+
+    .temp-display {
+      display: flex;
+      align-items: baseline;
+      justify-content: center;
+      line-height: 0.95;
+      margin: 1px 0;
+    }
+
+    .temp-number {
+      font-size: 34px;
+      font-weight: 900;
+      letter-spacing: -1px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .temp-unit {
+      font-size: 13px;
+      font-weight: 700;
+      margin-left: 2px;
+      opacity: 0.85;
+    }
+
+    .hardware-name {
+      font-size: 8.5px;
+      font-weight: 600;
+      color: var(--text-bright);
+      opacity: 0.9;
+      max-width: 170px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      text-align: center;
+    }
+
+    .cpu-group .temp-number,
+    .cpu-group .temp-unit {
+      color: var(--cpu-color);
+      text-shadow: 0 0 12px var(--cpu-glow);
+    }
+
+    .gpu-group .temp-number,
+    .gpu-group .temp-unit {
+      color: var(--gpu-color);
+      text-shadow: 0 0 12px var(--gpu-glow);
+    }
+
+    .center-badge {
+      padding: 1px 10px;
+      background: rgba(255, 106, 0, 0.1);
+      border: 1px solid rgba(255, 106, 0, 0.4);
+      border-radius: 8px;
+      font-size: 7.5px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      color: var(--cpu-color);
+      text-transform: uppercase;
+      z-index: 2;
+    }
+
+    .footer-bar {
+      margin-bottom: 6px;
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      font-size: 8px;
+      font-weight: 600;
+      color: var(--text-dim);
+      z-index: 2;
+    }
+
+    .footer-item span {
+      color: var(--text-bright);
+      font-weight: 700;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="viewport">
+    <div class="header-bar">
+      <div id="status-dot" class="status-dot"></div>
+      <div id="status-label" class="status-text">AGUARDANDO CAM</div>
+    </div>
+
+    <div class="telemetry-group cpu-group">
+      <div class="metric-title">CPU TEMP</div>
+      <div class="temp-display">
+        <span id="cpu-temp" class="temp-number">--</span>
+        <span class="temp-unit">°C</span>
+      </div>
+      <div id="cpu-name" class="hardware-name">CPU</div>
+    </div>
+
+    <div class="center-badge" id="badge-info">DUAL MONITOR</div>
+
+    <div class="telemetry-group gpu-group">
+      <div class="metric-title">GPU TEMP</div>
+      <div class="temp-display">
+        <span id="gpu-temp" class="temp-number">--</span>
+        <span class="temp-unit">°C</span>
+      </div>
+      <div id="gpu-name" class="hardware-name">GPU</div>
+    </div>
+
+    <div class="footer-bar">
+      <div class="footer-item">FAN: <span id="fan-rpm">--</span></div>
+      <div class="footer-item">PUMP: <span id="pump-rpm">--</span></div>
+      <div class="footer-item">LIQ: <span id="liq-temp">--°C</span></div>
+    </div>
+  </div>
+
+  <script>
+    const elStatusDot = document.getElementById('status-dot');
+    const elStatusLabel = document.getElementById('status-label');
+    const elCpuTemp = document.getElementById('cpu-temp');
+    const elCpuName = document.getElementById('cpu-name');
+    const elGpuTemp = document.getElementById('gpu-temp');
+    const elGpuName = document.getElementById('gpu-name');
+    const elFanRpm = document.getElementById('fan-rpm');
+    const elPumpRpm = document.getElementById('pump-rpm');
+    const elLiqTemp = document.getElementById('liq-temp');
+
+    let camDataReceived = false;
+
+    function cleanHardwareName(name, fallback) {
+      if (!name) return fallback;
+      return name
+        .replace(/(AMD|Intel|NVIDIA|GeForce|Core|Processor|Graphics)/gi, '')
+        .replace(/\(R\)|\(TM\)/gi, '')
+        .replace(/\s+/g, ' ')
+        .trim() || fallback;
+    }
+
+    function renderTelemetry(data) {
+      if (!data) return;
+
+      const cpu = data.cpus?.[0];
+      if (cpu) {
+        elCpuTemp.textContent = Math.round(cpu.temperature ?? 0);
+        if (cpu.name) {
+          elCpuName.textContent = cleanHardwareName(cpu.name, 'CPU');
+        }
+      }
+
+      const gpu = data.gpus?.[0];
+      if (gpu) {
+        elGpuTemp.textContent = Math.round(gpu.temperature ?? 0);
+        if (gpu.name) {
+          elGpuName.textContent = cleanHardwareName(gpu.name, 'GPU');
+        }
+      }
+
+      if (data.kraken) {
+        if (data.kraken.fanSpeed !== undefined) {
+          elFanRpm.textContent = `${data.kraken.fanSpeed} RPM`;
+        }
+        if (data.kraken.pumpSpeed !== undefined) {
+          elPumpRpm.textContent = `${data.kraken.pumpSpeed} RPM`;
+        }
+        if (data.kraken.liquidTemperature !== undefined) {
+          elLiqTemp.textContent = `${Math.round(data.kraken.liquidTemperature)}°C`;
+        }
+      }
+    }
+
+    window.nzxt = {
+      v1: {
+        onMonitoringDataUpdate: (data) => {
+          if (!camDataReceived) {
+            camDataReceived = true;
+            elStatusDot.classList.add('active');
+            elStatusLabel.textContent = 'CAM LIVE';
+          }
+          renderTelemetry(data);
+        }
+      }
+    };
+
+    setTimeout(() => {
+      if (!camDataReceived) {
+        elStatusDot.classList.add('active');
+        elStatusLabel.textContent = 'MOCK PREVIEW';
+        elCpuName.textContent = 'Ryzen 9700X';
+        elGpuName.textContent = 'RTX 5070 Ti';
+
+        function updateMock() {
+          if (camDataReceived) return;
+          renderTelemetry({
+            cpus: [{ temperature: 55 + Math.floor(Math.random() * 12), name: 'Ryzen 9700X' }],
+            gpus: [{ temperature: 48 + Math.floor(Math.random() * 8), name: 'RTX 5070 Ti' }],
+            kraken: {
+              fanSpeed: 1400 + Math.floor(Math.random() * 250),
+              pumpSpeed: 2800 + Math.floor(Math.random() * 100),
+              liquidTemperature: 33 + Math.floor(Math.random() * 3)
+            }
+          });
+        }
+
+        updateMock();
+        setInterval(updateMock, 1500);
+      }
+    }, 1500);
+  </script>
+</body>
+</html>
