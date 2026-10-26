@@ -3,20 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>NZXT Kraken 360 - Ceramic White Core</title>
+  <title>NZXT Kraken 360 - Event Horizon Black Hole Core</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@700;900&family=JetBrains+Mono:wght@800;900&display=swap" rel="stylesheet">
   <style>
     :root {
-      --screen-bg: #000000;
-      --dial-bg: #f8fafc;
-      --cpu-color: #d9381e;
-      --cpu-glow: rgba(217, 56, 30, 0.35);
+      --bg-void: #000000;
+      --core-bg: #ffffff;
+      --cpu-color: #c92a2a;
+      --cpu-glow: rgba(201, 42, 42, 0.4);
       --gpu-color: #0066cc;
-      --gpu-glow: rgba(0, 102, 204, 0.35);
+      --gpu-glow: rgba(0, 102, 204, 0.4);
       --bar-off: #e2e8f0;
-      --text-main: #0a0f1d;
       --text-dim: #64748b;
     }
 
@@ -32,15 +31,15 @@
       width: 100%;
       height: 100%;
       background-color: #000000;
-      color: var(--text-main);
-      font-family: 'JetBrains Mono', 'Chakra Petch', monospace, sans-serif;
+      color: #0f172a;
+      font-family: 'JetBrains Mono', 'Chakra Petch', monospace;
       overflow: hidden;
       display: flex;
       justify-content: center;
       align-items: center;
     }
 
-    /* O display físico é 240x240 com cantos pretos absolutos */
+    /* Container físico de 240x240 px */
     .viewport {
       width: 240px;
       height: 240px;
@@ -53,49 +52,127 @@
     }
 
     /* ========================================================
-       SOLUÇÃO DE BORDA: MOSTRADOR CIRCULAR CERÂMICO FLUTUANTE
-       O centro é branco, mas os 4 cantos da tela permanecem 
-       preto absoluto (#000), casando com o aro circular do cooler
+       EFEITO MOTION: DISCO DE ACREÇÃO DE BURACO NEGRO (BORDAS)
+       Plasma fluido em rotação que se curva para o vácuo negro
        ======================================================== */
-    .white-dial {
-      width: 218px;
-      height: 218px;
+    .black-hole-layer {
+      position: absolute;
+      width: 240px;
+      height: 240px;
+      pointer-events: none;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1;
+    }
+
+    /* Vórtice 1: Plasma quente fluido exterior */
+    .accretion-disk-outer {
+      position: absolute;
+      width: 236px;
+      height: 236px;
       border-radius: 50%;
-      background: radial-gradient(circle at 50% 45%, #ffffff 0%, #f1f5f9 85%, #e2e8f0 100%);
+      background: conic-gradient(
+        from 0deg,
+        rgba(255, 255, 255, 0.95) 0deg,
+        rgba(255, 140, 20, 0.75) 45deg,
+        rgba(255, 60, 0, 0.2) 90deg,
+        transparent 160deg,
+        rgba(0, 190, 255, 0.7) 220deg,
+        rgba(255, 255, 255, 0.9) 290deg,
+        rgba(255, 255, 255, 0.95) 360deg
+      );
+      filter: blur(5px);
+      animation: vortexSpin 4s linear infinite;
+      opacity: 0.85;
+      mix-blend-mode: screen;
+    }
+
+    /* Vórtice 2: Distorção gravitacional contrária */
+    .accretion-disk-inner {
+      position: absolute;
+      width: 224px;
+      height: 224px;
+      border-radius: 50%;
+      background: conic-gradient(
+        from 180deg,
+        rgba(255, 255, 255, 0.8) 0deg,
+        transparent 70deg,
+        rgba(255, 90, 0, 0.6) 160deg,
+        transparent 240deg,
+        rgba(0, 210, 255, 0.5) 310deg,
+        rgba(255, 255, 255, 0.8) 360deg
+      );
+      filter: blur(3px);
+      animation: vortexSpinReverse 6.5s linear infinite;
+      opacity: 0.9;
+    }
+
+    /* Anel de Fótons / Horizonte de Eventos fluido */
+    .photon-ring {
+      position: absolute;
+      width: 212px;
+      height: 212px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(255, 255, 255, 0.65);
       box-shadow: 
-        0 0 0 2px #0f172a,
-        0 0 16px rgba(255, 255, 255, 0.2),
-        inset 0 0 14px rgba(0, 0, 0, 0.12);
+        0 0 12px rgba(255, 255, 255, 0.8),
+        0 0 25px rgba(255, 140, 0, 0.5),
+        inset 0 0 10px rgba(0, 0, 0, 0.8);
+      animation: photonPulse 2.8s ease-in-out infinite alternate;
+    }
+
+    @keyframes vortexSpin {
+      0% { transform: rotate(0deg) scale(1); }
+      50% { transform: rotate(180deg) scale(1.02); }
+      100% { transform: rotate(360deg) scale(1); }
+    }
+
+    @keyframes vortexSpinReverse {
+      0% { transform: rotate(360deg) scale(1.02); }
+      50% { transform: rotate(180deg) scale(0.98); }
+      100% { transform: rotate(0deg) scale(1.02); }
+    }
+
+    @keyframes photonPulse {
+      from { transform: scale(0.99); opacity: 0.85; filter: drop-shadow(0 0 4px #fff); }
+      to { transform: scale(1.01); opacity: 1; filter: drop-shadow(0 0 8px #ffaa00); }
+    }
+
+    /* ========================================================
+       NÚCLEO SINGULARIDADE BRANCO (CONTEÚDO DE TELEMETRIA)
+       Bordas com lente gravitacional suave caindo no vácuo
+       ======================================================== */
+    .singularity-core {
       position: relative;
-      overflow: hidden;
+      width: 206px;
+      height: 206px;
+      border-radius: 50%;
+      background: radial-gradient(
+        circle at 50% 50%,
+        #ffffff 0%,
+        #f8fafc 68%,
+        #e2e8f0 82%,
+        #94a3b8 91%,
+        #0f172a 96%,
+        #000000 100%
+      );
+      box-shadow: 
+        inset 0 0 16px rgba(0, 0, 0, 0.2),
+        0 0 14px rgba(0, 0, 0, 0.9);
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      padding: 10px 16px;
-      gap: 7px;
+      padding: 10px 14px;
+      gap: 6px;
+      z-index: 2;
     }
 
-    /* Anel externo decorativo com rotação lenta no aro preto */
-    .outer-orbit {
-      position: absolute;
-      width: 232px;
-      height: 232px;
-      border-radius: 50%;
-      border: 1px dashed rgba(255, 255, 255, 0.2);
-      pointer-events: none;
-      animation: orbitSpin 30s linear infinite;
-    }
-
-    @keyframes orbitSpin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-
-    /* Seções principais */
+    /* Seções de Hardware */
     .meter-section {
       width: 100%;
-      max-width: 172px;
+      max-width: 164px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -106,7 +183,7 @@
       display: flex;
       align-items: baseline;
       justify-content: space-between;
-      margin-bottom: 3px;
+      margin-bottom: 2px;
     }
 
     .label-box {
@@ -124,7 +201,7 @@
     }
 
     .label-sub {
-      font-size: 8px;
+      font-size: 7.5px;
       font-weight: 800;
       color: var(--text-dim);
       letter-spacing: 0.8px;
@@ -134,7 +211,7 @@
     .cpu-sec .label-tag { color: var(--cpu-color); }
     .gpu-sec .label-tag { color: var(--gpu-color); }
 
-    /* Números Gigantes com contraste profundo no fundo branco */
+    /* Números Gigantes no Núcleo Branco */
     .big-temp {
       display: flex;
       align-items: baseline;
@@ -143,37 +220,37 @@
     }
 
     .temp-digits {
-      font-size: 54px;
+      font-size: 52px;
       font-weight: 900;
       letter-spacing: -3px;
       font-variant-numeric: tabular-nums;
     }
 
     .temp-symbol {
-      font-size: 20px;
+      font-size: 18px;
       font-weight: 800;
       margin-left: 1px;
-      opacity: 0.8;
+      opacity: 0.85;
     }
 
     .cpu-sec .temp-digits,
     .cpu-sec .temp-symbol {
       color: var(--cpu-color);
-      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
     }
 
     .gpu-sec .temp-digits,
     .gpu-sec .temp-symbol {
       color: var(--gpu-color);
-      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
     }
 
-    /* Barras de LED estilo VU-Meter no fundo claro */
+    /* Barra Segmentada de LED */
     .led-bar {
       width: 100%;
       display: flex;
-      gap: 2.5px;
-      height: 6.5px;
+      gap: 2px;
+      height: 6px;
     }
 
     .segment {
@@ -186,18 +263,17 @@
 
     .cpu-sec .segment.active {
       background-color: var(--cpu-color);
-      box-shadow: 0 0 6px var(--cpu-glow);
+      box-shadow: 0 0 5px var(--cpu-glow);
     }
 
     .gpu-sec .segment.active {
       background-color: var(--gpu-color);
-      box-shadow: 0 0 6px var(--gpu-glow);
+      box-shadow: 0 0 5px var(--gpu-glow);
     }
 
-    /* Alerta Crítico (>75°C) */
     .segment.critical {
       background-color: #ff0044 !important;
-      box-shadow: 0 0 8px rgba(255, 0, 68, 0.6) !important;
+      box-shadow: 0 0 8px #ff0044 !important;
       animation: critBlink 0.6s ease-in-out infinite alternate !important;
     }
 
@@ -209,7 +285,7 @@
     /* Divisor Central */
     .divider-strip {
       width: 100%;
-      max-width: 172px;
+      max-width: 164px;
       height: 1px;
       background: linear-gradient(90deg, transparent, #cbd5e1, transparent);
       margin: 1px 0;
@@ -219,11 +295,15 @@
 <body>
 
   <div class="viewport">
-    <!-- Órbita tracejada externa nos cantos escuros -->
-    <div class="outer-orbit"></div>
+    <!-- Camada Externa de Buraco Negro / Disco de Acreção Fluido -->
+    <div class="black-hole-layer">
+      <div class="accretion-disk-outer"></div>
+      <div class="accretion-disk-inner"></div>
+      <div class="photon-ring"></div>
+    </div>
 
-    <!-- Mostrador Central Branco Cerâmico (Corte Circular Perfeito) -->
-    <div class="white-dial">
+    <!-- Núcleo de Singularidade Branco com Telemetria -->
+    <div class="singularity-core">
       <!-- Bloco 1: CPU -->
       <div class="meter-section cpu-sec">
         <div class="stat-row">
