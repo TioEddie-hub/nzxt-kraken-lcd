@@ -3,20 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>NZXT Kraken 360 - Event Horizon Black Hole Core</title>
+  <title>NZXT Kraken 360 - Centered Waves Ultra Big</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@700;900&family=JetBrains+Mono:wght@800;900&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg-void: #000000;
-      --core-bg: #ffffff;
-      --cpu-color: #c92a2a;
-      --cpu-glow: rgba(201, 42, 42, 0.4);
-      --gpu-color: #0066cc;
-      --gpu-glow: rgba(0, 102, 204, 0.4);
-      --bar-off: #e2e8f0;
-      --text-dim: #64748b;
+      --bg: #000000;
+      --cpu-color: #ff7700;
+      --cpu-glow: rgba(255, 119, 0, 0.45);
+      --gpu-color: #00e5ff;
+      --gpu-glow: rgba(0, 229, 255, 0.45);
     }
 
     * {
@@ -31,15 +28,15 @@
       width: 100%;
       height: 100%;
       background-color: #000000;
-      color: #0f172a;
-      font-family: 'JetBrains Mono', 'Chakra Petch', monospace;
+      color: #ffffff;
+      font-family: 'Chakra Petch', -apple-system, sans-serif;
       overflow: hidden;
       display: flex;
       justify-content: center;
       align-items: center;
     }
 
-    /* Container físico de 240x240 px */
+    /* Container exato de 240x240 */
     .viewport {
       width: 240px;
       height: 240px;
@@ -52,10 +49,10 @@
     }
 
     /* ========================================================
-       EFEITO MOTION: DISCO DE ACREÇÃO DE BURACO NEGRO (BORDAS)
-       Plasma fluido em rotação que se curva para o vácuo negro
+       EFEITO MOTION: ONDULAÇÃO LÍQUIDA / WAVES NA BORDA
+       Bordas orgânicas ondulantes em rotação com pulso fluido
        ======================================================== */
-    .black-hole-layer {
+    .waves-container {
       position: absolute;
       width: 240px;
       height: 240px;
@@ -66,284 +63,192 @@
       z-index: 1;
     }
 
-    /* Vórtice 1: Plasma quente fluido exterior */
-    .accretion-disk-outer {
+    /* Onda 1: Ciano fluido com deformação senoidal */
+    .wave-ring-1 {
       position: absolute;
-      width: 236px;
-      height: 236px;
-      border-radius: 50%;
-      background: conic-gradient(
-        from 0deg,
-        rgba(255, 255, 255, 0.95) 0deg,
-        rgba(255, 140, 20, 0.75) 45deg,
-        rgba(255, 60, 0, 0.2) 90deg,
-        transparent 160deg,
-        rgba(0, 190, 255, 0.7) 220deg,
-        rgba(255, 255, 255, 0.9) 290deg,
-        rgba(255, 255, 255, 0.95) 360deg
-      );
-      filter: blur(5px);
-      animation: vortexSpin 4s linear infinite;
-      opacity: 0.85;
-      mix-blend-mode: screen;
-    }
-
-    /* Vórtice 2: Distorção gravitacional contrária */
-    .accretion-disk-inner {
-      position: absolute;
-      width: 224px;
-      height: 224px;
-      border-radius: 50%;
-      background: conic-gradient(
-        from 180deg,
-        rgba(255, 255, 255, 0.8) 0deg,
-        transparent 70deg,
-        rgba(255, 90, 0, 0.6) 160deg,
-        transparent 240deg,
-        rgba(0, 210, 255, 0.5) 310deg,
-        rgba(255, 255, 255, 0.8) 360deg
-      );
-      filter: blur(3px);
-      animation: vortexSpinReverse 6.5s linear infinite;
-      opacity: 0.9;
-    }
-
-    /* Anel de Fótons / Horizonte de Eventos fluido */
-    .photon-ring {
-      position: absolute;
-      width: 212px;
-      height: 212px;
-      border-radius: 50%;
-      border: 1.5px solid rgba(255, 255, 255, 0.65);
+      width: 228px;
+      height: 228px;
+      border-radius: 48% 52% 51% 49% / 51% 49% 52% 48%;
+      border: 1.5px solid rgba(0, 229, 255, 0.45);
       box-shadow: 
-        0 0 12px rgba(255, 255, 255, 0.8),
-        0 0 25px rgba(255, 140, 0, 0.5),
-        inset 0 0 10px rgba(0, 0, 0, 0.8);
-      animation: photonPulse 2.8s ease-in-out infinite alternate;
+        0 0 10px rgba(0, 229, 255, 0.3),
+        inset 0 0 10px rgba(0, 229, 255, 0.15);
+      animation: waveMorph 7s ease-in-out infinite alternate, waveRotate 14s linear infinite;
     }
 
-    @keyframes vortexSpin {
-      0% { transform: rotate(0deg) scale(1); }
-      50% { transform: rotate(180deg) scale(1.02); }
-      100% { transform: rotate(360deg) scale(1); }
+    /* Onda 2: Laranja térmico fluido em sentido contrário */
+    .wave-ring-2 {
+      position: absolute;
+      width: 234px;
+      height: 234px;
+      border-radius: 52% 48% 49% 51% / 49% 51% 48% 52%;
+      border: 1.5px solid rgba(255, 119, 0, 0.35);
+      box-shadow: 
+        0 0 12px rgba(255, 119, 0, 0.25),
+        inset 0 0 8px rgba(255, 119, 0, 0.1);
+      animation: waveMorph 5s ease-in-out infinite alternate-reverse, waveRotateReverse 18s linear infinite;
     }
 
-    @keyframes vortexSpinReverse {
-      0% { transform: rotate(360deg) scale(1.02); }
-      50% { transform: rotate(180deg) scale(0.98); }
-      100% { transform: rotate(0deg) scale(1.02); }
-    }
-
-    @keyframes photonPulse {
-      from { transform: scale(0.99); opacity: 0.85; filter: drop-shadow(0 0 4px #fff); }
-      to { transform: scale(1.01); opacity: 1; filter: drop-shadow(0 0 8px #ffaa00); }
-    }
-
-    /* ========================================================
-       NÚCLEO SINGULARIDADE BRANCO (CONTEÚDO DE TELEMETRIA)
-       Bordas com lente gravitacional suave caindo no vácuo
-       ======================================================== */
-    .singularity-core {
-      position: relative;
+    /* Onda 3: Ripple de pulso expansivo */
+    .ripple-wave {
+      position: absolute;
       width: 206px;
       height: 206px;
       border-radius: 50%;
-      background: radial-gradient(
-        circle at 50% 50%,
-        #ffffff 0%,
-        #f8fafc 68%,
-        #e2e8f0 82%,
-        #94a3b8 91%,
-        #0f172a 96%,
-        #000000 100%
-      );
-      box-shadow: 
-        inset 0 0 16px rgba(0, 0, 0, 0.2),
-        0 0 14px rgba(0, 0, 0, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      animation: ripplePulse 3.2s cubic-bezier(0.1, 0.7, 0.3, 1) infinite;
+    }
+
+    .ripple-wave-2 {
+      position: absolute;
+      width: 206px;
+      height: 206px;
+      border-radius: 50%;
+      border: 1px solid rgba(0, 229, 255, 0.35);
+      animation: ripplePulse 3.2s cubic-bezier(0.1, 0.7, 0.3, 1) infinite 1.6s;
+    }
+
+    @keyframes waveMorph {
+      0% { border-radius: 48% 52% 51% 49% / 51% 49% 52% 48%; }
+      33% { border-radius: 53% 47% 54% 46% / 47% 53% 46% 54%; }
+      66% { border-radius: 46% 54% 48% 52% / 54% 46% 52% 48%; }
+      100% { border-radius: 51% 49% 52% 48% / 49% 51% 48% 52%; }
+    }
+
+    @keyframes waveRotate {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    @keyframes waveRotateReverse {
+      0% { transform: rotate(360deg); }
+      100% { transform: rotate(0deg); }
+    }
+
+    @keyframes ripplePulse {
+      0% { transform: scale(0.92); opacity: 0.8; }
+      100% { transform: scale(1.14); opacity: 0; }
+    }
+
+    /* ========================================================
+       CONTEÚDO CENTRALIZADO COM NÚMEROS GIGANTES (CPU & GPU)
+       ======================================================== */
+    .telemetry-stack {
+      position: relative;
+      width: 100%;
+      height: 100%;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      padding: 10px 14px;
-      gap: 6px;
       z-index: 2;
+      padding: 8px 0;
+      gap: 4px;
     }
 
-    /* Seções de Hardware */
-    .meter-section {
-      width: 100%;
-      max-width: 164px;
+    .block {
       display: flex;
       flex-direction: column;
       align-items: center;
-    }
-
-    .stat-row {
+      justify-content: center;
       width: 100%;
-      display: flex;
-      align-items: baseline;
-      justify-content: space-between;
-      margin-bottom: 2px;
     }
 
-    .label-box {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      line-height: 1;
-    }
-
-    .label-tag {
+    .label {
+      font-family: 'JetBrains Mono', monospace;
       font-size: 13px;
       font-weight: 900;
-      letter-spacing: 1.5px;
+      letter-spacing: 3px;
       text-transform: uppercase;
+      line-height: 1;
+      margin-bottom: 1px;
     }
 
-    .label-sub {
-      font-size: 7.5px;
-      font-weight: 800;
-      color: var(--text-dim);
-      letter-spacing: 0.8px;
-      margin-top: 2px;
+    .cpu-block .label {
+      color: var(--cpu-color);
+      text-shadow: 0 0 10px var(--cpu-glow);
     }
 
-    .cpu-sec .label-tag { color: var(--cpu-color); }
-    .gpu-sec .label-tag { color: var(--gpu-color); }
+    .gpu-block .label {
+      color: var(--gpu-color);
+      text-shadow: 0 0 10px var(--gpu-glow);
+    }
 
-    /* Números Gigantes no Núcleo Branco */
-    .big-temp {
+    .huge-temp-row {
       display: flex;
       align-items: baseline;
-      font-family: 'Chakra Petch', sans-serif;
-      line-height: 0.85;
+      justify-content: center;
+      line-height: 0.82;
     }
 
-    .temp-digits {
-      font-size: 52px;
+    /* Números ampliados para 68px de altura */
+    .huge-number {
+      font-size: 68px;
       font-weight: 900;
       letter-spacing: -3px;
       font-variant-numeric: tabular-nums;
     }
 
-    .temp-symbol {
-      font-size: 18px;
+    .huge-deg {
+      font-size: 26px;
       font-weight: 800;
-      margin-left: 1px;
+      margin-left: 2px;
       opacity: 0.85;
+      font-family: 'JetBrains Mono', monospace;
     }
 
-    .cpu-sec .temp-digits,
-    .cpu-sec .temp-symbol {
+    .cpu-block .huge-number,
+    .cpu-block .huge-deg {
       color: var(--cpu-color);
-      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+      text-shadow: 0 0 24px var(--cpu-glow);
     }
 
-    .gpu-sec .temp-digits,
-    .gpu-sec .temp-symbol {
+    .gpu-block .huge-number,
+    .gpu-block .huge-deg {
       color: var(--gpu-color);
-      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+      text-shadow: 0 0 24px var(--gpu-glow);
     }
 
-    /* Barra Segmentada de LED */
-    .led-bar {
-      width: 100%;
-      display: flex;
-      gap: 2px;
-      height: 6px;
-    }
-
-    .segment {
-      flex: 1;
-      height: 100%;
-      background-color: var(--bar-off);
-      border-radius: 1px;
-      transition: background-color 0.25s ease;
-    }
-
-    .cpu-sec .segment.active {
-      background-color: var(--cpu-color);
-      box-shadow: 0 0 5px var(--cpu-glow);
-    }
-
-    .gpu-sec .segment.active {
-      background-color: var(--gpu-color);
-      box-shadow: 0 0 5px var(--gpu-glow);
-    }
-
-    .segment.critical {
-      background-color: #ff0044 !important;
-      box-shadow: 0 0 8px #ff0044 !important;
-      animation: critBlink 0.6s ease-in-out infinite alternate !important;
-    }
-
-    @keyframes critBlink {
-      from { opacity: 1; }
-      to { opacity: 0.35; }
-    }
-
-    /* Divisor Central */
-    .divider-strip {
-      width: 100%;
-      max-width: 164px;
+    /* Linha divisória minimalista */
+    .center-line {
+      width: 110px;
       height: 1px;
-      background: linear-gradient(90deg, transparent, #cbd5e1, transparent);
-      margin: 1px 0;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent);
+      margin: 2px 0;
     }
   </style>
 </head>
 <body>
 
   <div class="viewport">
-    <!-- Camada Externa de Buraco Negro / Disco de Acreção Fluido -->
-    <div class="black-hole-layer">
-      <div class="accretion-disk-outer"></div>
-      <div class="accretion-disk-inner"></div>
-      <div class="photon-ring"></div>
+    <!-- Efeito Motion: Ondas Líquidas e Ripples na Borda -->
+    <div class="waves-container">
+      <div class="wave-ring-1"></div>
+      <div class="wave-ring-2"></div>
+      <div class="ripple-wave"></div>
+      <div class="ripple-wave-2"></div>
     </div>
 
-    <!-- Núcleo de Singularidade Branco com Telemetria -->
-    <div class="singularity-core">
-      <!-- Bloco 1: CPU -->
-      <div class="meter-section cpu-sec">
-        <div class="stat-row">
-          <div class="label-box">
-            <div class="label-tag">CPU</div>
-            <div class="label-sub" id="cpu-name">RYZEN</div>
-          </div>
-          <div class="big-temp">
-            <span id="cpu-temp" class="temp-digits">--</span>
-            <span class="temp-symbol">°</span>
-          </div>
-        </div>
-        <div class="led-bar" id="cpu-bar">
-          <div class="segment"></div><div class="segment"></div><div class="segment"></div>
-          <div class="segment"></div><div class="segment"></div><div class="segment"></div>
-          <div class="segment"></div><div class="segment"></div><div class="segment"></div>
-          <div class="segment"></div><div class="segment"></div><div class="segment"></div>
+    <!-- Telemetria Centralizada: Apenas CPU e GPU com Números Gigantes -->
+    <div class="telemetry-stack">
+      <!-- Bloco Topo: CPU -->
+      <div class="block cpu-block">
+        <div class="label">CPU</div>
+        <div class="huge-temp-row">
+          <span id="cpu-temp" class="huge-number">--</span>
+          <span class="huge-deg">°</span>
         </div>
       </div>
 
-      <!-- Divisor Central -->
-      <div class="divider-strip"></div>
+      <!-- Divisor -->
+      <div class="center-line"></div>
 
-      <!-- Bloco 2: GPU -->
-      <div class="meter-section gpu-sec">
-        <div class="stat-row">
-          <div class="label-box">
-            <div class="label-tag">GPU</div>
-            <div class="label-sub" id="gpu-name">RADEON</div>
-          </div>
-          <div class="big-temp">
-            <span id="gpu-temp" class="temp-digits">--</span>
-            <span class="temp-symbol">°</span>
-          </div>
-        </div>
-        <div class="led-bar" id="gpu-bar">
-          <div class="segment"></div><div class="segment"></div><div class="segment"></div>
-          <div class="segment"></div><div class="segment"></div><div class="segment"></div>
-          <div class="segment"></div><div class="segment"></div><div class="segment"></div>
-          <div class="segment"></div><div class="segment"></div><div class="segment"></div>
+      <!-- Bloco Fundo: GPU -->
+      <div class="block gpu-block">
+        <div class="label">GPU</div>
+        <div class="huge-temp-row">
+          <span id="gpu-temp" class="huge-number">--</span>
+          <span class="huge-deg">°</span>
         </div>
       </div>
     </div>
@@ -351,66 +256,21 @@
 
   <script>
     const elCpuTemp = document.getElementById('cpu-temp');
-    const elCpuName = document.getElementById('cpu-name');
     const elGpuTemp = document.getElementById('gpu-temp');
-    const elGpuName = document.getElementById('gpu-name');
-    const cpuSegments = document.getElementById('cpu-bar').children;
-    const gpuSegments = document.getElementById('gpu-bar').children;
 
     let camConnected = false;
-
-    function updateBar(segments, temp) {
-      const minTemp = 30;
-      const maxTemp = 85;
-      const total = segments.length;
-      const ratio = Math.max(0, Math.min(1, (temp - minTemp) / (maxTemp - minTemp)));
-      const activeCount = Math.round(ratio * total);
-
-      for (let i = 0; i < total; i++) {
-        const seg = segments[i];
-        if (i < activeCount) {
-          seg.classList.add('active');
-          if (temp >= 75 && i >= total - 3) {
-            seg.classList.add('critical');
-          } else {
-            seg.classList.remove('critical');
-          }
-        } else {
-          seg.classList.remove('active', 'critical');
-        }
-      }
-    }
-
-    function cleanName(name, fallback) {
-      if (!name) return fallback;
-      return name
-        .replace(/(AMD|Intel|NVIDIA|GeForce|Processor|Graphics)/gi, '')
-        .replace(/\(R\)|\(TM\)/gi, '')
-        .replace(/\s+/g, ' ')
-        .trim() || fallback;
-    }
 
     function renderData(data) {
       if (!data) return;
 
       const cpu = data.cpus?.[0];
-      if (cpu) {
-        const temp = Math.round(cpu.temperature ?? 0);
-        elCpuTemp.textContent = temp;
-        updateBar(cpuSegments, temp);
-        if (cpu.name) {
-          elCpuName.textContent = cleanName(cpu.name, 'RYZEN');
-        }
+      if (cpu && cpu.temperature !== undefined) {
+        elCpuTemp.textContent = Math.round(cpu.temperature);
       }
 
       const gpu = data.gpus?.[0];
-      if (gpu) {
-        const temp = Math.round(gpu.temperature ?? 0);
-        elGpuTemp.textContent = temp;
-        updateBar(gpuSegments, temp);
-        if (gpu.name) {
-          elGpuName.textContent = cleanName(gpu.name, 'RADEON');
-        }
+      if (gpu && gpu.temperature !== undefined) {
+        elGpuTemp.textContent = Math.round(gpu.temperature);
       }
     }
 
@@ -427,14 +287,11 @@
     // Modo Mock
     setTimeout(() => {
       if (!camConnected) {
-        elCpuName.textContent = '5600X';
-        elGpuName.textContent = '9070 XT';
-
         function mockCycle() {
           if (camConnected) return;
           renderData({
-            cpus: [{ temperature: 48 + Math.floor(Math.random() * 5), name: '5600X' }],
-            gpus: [{ temperature: 53 + Math.floor(Math.random() * 6), name: '9070 XT' }]
+            cpus: [{ temperature: 48 + Math.floor(Math.random() * 5) }],
+            gpus: [{ temperature: 53 + Math.floor(Math.random() * 6) }]
           });
         }
 
