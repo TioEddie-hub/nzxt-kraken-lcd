@@ -3,21 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>NZXT Dual Bars - Native Proportions Fluid</title>
+  <title>NZXT Kraken 360 - Industrial VU-Meter</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@700;900&family=JetBrains+Mono:wght@800;900&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg: #000000;
-      --track-bg: #444955;
-      --cpu-from: #00ff66;
-      --cpu-to: #00ffcc;
-      --cpu-glow: rgba(0, 255, 120, 0.4);
-      --gpu-from: #ff0055;
-      --gpu-to: #ff3377;
-      --gpu-glow: rgba(255, 0, 85, 0.4);
-      --text-white: #ffffff;
+      --cpu-color: #ff6a00;
+      --cpu-glow: rgba(255, 106, 0, 0.5);
+      --gpu-color: #00e5ff;
+      --gpu-glow: rgba(0, 229, 255, 0.5);
+      --bar-off: #131720;
+      --text-dim: #707c90;
     }
 
     * {
@@ -33,200 +31,284 @@
       height: 100%;
       background-color: #000000;
       color: #ffffff;
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-family: 'JetBrains Mono', 'Chakra Petch', monospace, sans-serif;
       overflow: hidden;
       display: flex;
       justify-content: center;
       align-items: center;
     }
 
-    /* Tela física 240x240 */
-    .viewport {
+    /* Resolução nativa exata do Kraken 360: 240x240 */
+    .screen {
       width: 240px;
       height: 240px;
       background-color: #000000;
       position: relative;
       overflow: hidden;
       display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
-    }
-
-    /* Container com a proporção exata do preset nativo NZXT */
-    .hud-box {
-      width: 178px;
-      display: flex;
-      flex-direction: column;
+      padding: 14px 18px;
       gap: 10px;
     }
 
-    /* Módulo individual (CPU no topo, GPU na base) */
-    .module {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-    }
-
-    /* Lado Esquerdo: Barra + Rótulo */
-    .bar-side {
-      flex: 1;
+    /* Seções principais de hardware */
+    .meter-section {
+      width: 100%;
+      max-width: 204px;
       display: flex;
       flex-direction: column;
+      align-items: center;
     }
 
-    .label {
-      font-size: 11px;
-      font-weight: 800;
-      letter-spacing: 0.8px;
-      color: var(--text-white);
-      text-transform: uppercase;
-      line-height: 1;
-      padding-left: 1px;
-    }
-
-    .cpu-module .label {
-      margin-bottom: 5px;
-    }
-
-    .gpu-module .label {
-      margin-top: 5px;
-    }
-
-    /* Trilho da barra em formato cápsula (Pill shape) */
-    .bar-track {
+    /* Linha do topo de cada bloco: Etiqueta + Valor Gigante */
+    .stat-row {
       width: 100%;
-      height: 11px;
-      background-color: var(--track-bg);
-      border-radius: 999px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    /* Preenchimento Fluido com Gradiente */
-    .bar-fill {
-      height: 100%;
-      width: 0%;
-      border-radius: 999px;
-      transition: width 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
-      position: relative;
-      background-size: 200% 100%;
-    }
-
-    /* Barra CPU */
-    .cpu-fill {
-      background-image: linear-gradient(90deg, var(--cpu-from), var(--cpu-to), var(--cpu-from));
-      box-shadow: 0 0 10px var(--cpu-glow);
-      animation: fluidShimmer 3.5s ease-in-out infinite;
-    }
-
-    /* Barra GPU */
-    .gpu-fill {
-      background-image: linear-gradient(90deg, var(--gpu-from), var(--gpu-to), var(--gpu-from));
-      box-shadow: 0 0 10px var(--gpu-glow);
-      animation: fluidShimmer 3.5s ease-in-out infinite 1.7s;
-    }
-
-    @keyframes fluidShimmer {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-
-    /* Lado Direito: Número Gigante alinhado à barra */
-    .num-side {
       display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 4px;
+    }
+
+    .label-box {
+      display: flex;
+      flex-direction: column;
       align-items: flex-start;
-      line-height: 0.82;
-      min-width: 68px;
-      justify-content: flex-end;
+      line-height: 1;
     }
 
-    /* Número ampliado para 48px (~35% maior que o nativo da NZXT, ideal para distância) */
-    .temp-val {
-      font-size: 48px;
+    .label-tag {
+      font-size: 13px;
       font-weight: 900;
-      letter-spacing: -2px;
-      color: var(--text-white);
-      font-variant-numeric: tabular-nums;
-      text-shadow: 0 2px 12px rgba(0, 0, 0, 0.9);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
     }
 
-    .temp-deg {
-      font-size: 15px;
+    .label-sub {
+      font-size: 8px;
       font-weight: 800;
+      color: var(--text-dim);
+      letter-spacing: 1px;
       margin-top: 3px;
+    }
+
+    .cpu-sec .label-tag {
+      color: var(--cpu-color);
+      text-shadow: 0 0 10px var(--cpu-glow);
+    }
+
+    .gpu-sec .label-tag {
+      color: var(--gpu-color);
+      text-shadow: 0 0 10px var(--gpu-glow);
+    }
+
+    /* Números GIGANTES para visibilidade máxima através do vidro */
+    .big-temp {
+      display: flex;
+      align-items: baseline;
+      font-family: 'Chakra Petch', sans-serif;
+      line-height: 0.85;
+    }
+
+    .temp-digits {
+      font-size: 58px;
+      font-weight: 900;
+      letter-spacing: -3px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .temp-symbol {
+      font-size: 22px;
+      font-weight: 800;
       margin-left: 2px;
-      color: var(--text-white);
-      opacity: 0.9;
+      opacity: 0.85;
+    }
+
+    .cpu-sec .temp-digits,
+    .cpu-sec .temp-symbol {
+      color: var(--cpu-color);
+      text-shadow: 0 0 20px var(--cpu-glow);
+    }
+
+    .gpu-sec .temp-digits,
+    .gpu-sec .temp-symbol {
+      color: var(--gpu-color);
+      text-shadow: 0 0 20px var(--gpu-glow);
+    }
+
+    /* ========================================================
+       EFEITO MOTION 2: BARRAS SEGMENTADAS DE LED ESTILO VU-METER
+       ======================================================== */
+    .led-bar {
+      width: 100%;
+      display: flex;
+      gap: 3px;
+      height: 7px;
+    }
+
+    .segment {
+      flex: 1;
+      height: 100%;
+      background-color: var(--bar-off);
+      border-radius: 1px;
+      transition: background-color 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    /* Segmento CPU Ativo */
+    .cpu-sec .segment.active {
+      background-color: var(--cpu-color);
+      box-shadow: 0 0 8px var(--cpu-glow);
+      animation: ledPulse 2s ease-in-out infinite;
+    }
+
+    /* Segmento GPU Ativo */
+    .gpu-sec .segment.active {
+      background-color: var(--gpu-color);
+      box-shadow: 0 0 8px var(--gpu-glow);
+      animation: ledPulse 2s ease-in-out infinite;
+    }
+
+    /* Pulsação sutil estilo respiração industrial */
+    @keyframes ledPulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.82; }
+    }
+
+    /* Segmento de Pico / Alerta caso esquente muito (>75°C) */
+    .segment.critical {
+      background-color: #ff0055 !important;
+      box-shadow: 0 0 12px #ff0055 !important;
+      animation: criticalBlink 0.6s ease-in-out infinite alternate !important;
+    }
+
+    @keyframes criticalBlink {
+      from { opacity: 1; }
+      to { opacity: 0.4; }
+    }
+
+    /* Divisor Central Minimalista */
+    .divider-strip {
+      width: 100%;
+      max-width: 204px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+      margin: 2px 0;
     }
   </style>
 </head>
 <body>
 
-  <div class="viewport">
-    <div class="hud-box">
-      <!-- Módulo Superior: CPU -->
-      <div class="module cpu-module">
-        <div class="bar-side">
-          <span class="label">CPU</span>
-          <div class="bar-track">
-            <div id="cpu-fill" class="bar-fill cpu-fill"></div>
-          </div>
+  <div class="screen">
+    <!-- Bloco 1: CPU -->
+    <div class="meter-section cpu-sec">
+      <div class="stat-row">
+        <div class="label-box">
+          <div class="label-tag">CPU</div>
+          <div class="label-sub" id="cpu-name">RYZEN</div>
         </div>
-        <div class="num-side">
-          <span id="cpu-num" class="temp-val">--</span>
-          <span class="temp-deg">°</span>
+        <div class="big-temp">
+          <span id="cpu-temp" class="temp-digits">--</span>
+          <span class="temp-symbol">°</span>
         </div>
       </div>
+      <!-- Barra de 12 segmentos de LED -->
+      <div class="led-bar" id="cpu-bar">
+        <div class="segment"></div><div class="segment"></div><div class="segment"></div>
+        <div class="segment"></div><div class="segment"></div><div class="segment"></div>
+        <div class="segment"></div><div class="segment"></div><div class="segment"></div>
+        <div class="segment"></div><div class="segment"></div><div class="segment"></div>
+      </div>
+    </div>
 
-      <!-- Módulo Inferior: GPU -->
-      <div class="module gpu-module">
-        <div class="bar-side">
-          <div class="bar-track">
-            <div id="gpu-fill" class="bar-fill gpu-fill"></div>
-          </div>
-          <span class="label">GPU</span>
+    <!-- Divisor Central -->
+    <div class="divider-strip"></div>
+
+    <!-- Bloco 2: GPU -->
+    <div class="meter-section gpu-sec">
+      <div class="stat-row">
+        <div class="label-box">
+          <div class="label-tag">GPU</div>
+          <div class="label-sub" id="gpu-name">RADEON</div>
         </div>
-        <div class="num-side">
-          <span id="gpu-num" class="temp-val">--</span>
-          <span class="temp-deg">°</span>
+        <div class="big-temp">
+          <span id="gpu-temp" class="temp-digits">--</span>
+          <span class="temp-symbol">°</span>
         </div>
+      </div>
+      <!-- Barra de 12 segmentos de LED -->
+      <div class="led-bar" id="gpu-bar">
+        <div class="segment"></div><div class="segment"></div><div class="segment"></div>
+        <div class="segment"></div><div class="segment"></div><div class="segment"></div>
+        <div class="segment"></div><div class="segment"></div><div class="segment"></div>
+        <div class="segment"></div><div class="segment"></div><div class="segment"></div>
       </div>
     </div>
   </div>
 
   <script>
-    const elCpuNum = document.getElementById('cpu-num');
-    const elGpuNum = document.getElementById('gpu-num');
-    const elCpuFill = document.getElementById('cpu-fill');
-    const elGpuFill = document.getElementById('gpu-fill');
+    const elCpuTemp = document.getElementById('cpu-temp');
+    const elCpuName = document.getElementById('cpu-name');
+    const elGpuTemp = document.getElementById('gpu-temp');
+    const elGpuName = document.getElementById('gpu-name');
+    const cpuSegments = document.getElementById('cpu-bar').children;
+    const gpuSegments = document.getElementById('gpu-bar').children;
 
     let camConnected = false;
 
-    // Escala de temperatura nas barras: 25°C a 85°C
-    function calcRatio(temp) {
-      const min = 25;
-      const max = 85;
-      const clamped = Math.max(min, Math.min(max, temp));
-      return ((clamped - min) / (max - min)) * 100;
+    // Atualiza barra de 12 segmentos de acordo com a temperatura (escala de 30°C a 90°C)
+    function updateBar(segments, temp) {
+      const minTemp = 30;
+      const maxTemp = 85;
+      const total = segments.length; // 12
+      const ratio = Math.max(0, Math.min(1, (temp - minTemp) / (maxTemp - minTemp)));
+      const activeCount = Math.round(ratio * total);
+
+      for (let i = 0; i < total; i++) {
+        const seg = segments[i];
+        if (i < activeCount) {
+          seg.classList.add('active');
+          if (temp >= 75 && i >= total - 3) {
+            seg.classList.add('critical');
+          } else {
+            seg.classList.remove('critical');
+          }
+        } else {
+          seg.classList.remove('active', 'critical');
+        }
+      }
+    }
+
+    function cleanName(name, fallback) {
+      if (!name) return fallback;
+      return name
+        .replace(/(AMD|Intel|NVIDIA|GeForce|Processor|Graphics)/gi, '')
+        .replace(/\(R\)|\(TM\)/gi, '')
+        .replace(/\s+/g, ' ')
+        .trim() || fallback;
     }
 
     function renderData(data) {
       if (!data) return;
 
       const cpu = data.cpus?.[0];
-      if (cpu && cpu.temperature !== undefined) {
-        const temp = Math.round(cpu.temperature);
-        elCpuNum.textContent = temp;
-        elCpuFill.style.width = `${calcRatio(temp)}%`;
+      if (cpu) {
+        const temp = Math.round(cpu.temperature ?? 0);
+        elCpuTemp.textContent = temp;
+        updateBar(cpuSegments, temp);
+        if (cpu.name) {
+          elCpuName.textContent = cleanName(cpu.name, 'RYZEN');
+        }
       }
 
       const gpu = data.gpus?.[0];
-      if (gpu && gpu.temperature !== undefined) {
-        const temp = Math.round(gpu.temperature);
-        elGpuNum.textContent = temp;
-        elGpuFill.style.width = `${calcRatio(temp)}%`;
+      if (gpu) {
+        const temp = Math.round(gpu.temperature ?? 0);
+        elGpuTemp.textContent = temp;
+        updateBar(gpuSegments, temp);
+        if (gpu.name) {
+          elGpuName.textContent = cleanName(gpu.name, 'RADEON');
+        }
       }
     }
 
@@ -240,14 +322,17 @@
       }
     };
 
-    // Modo Mock para testes locais
+    // Modo Mock para teste no Chrome desktop
     setTimeout(() => {
       if (!camConnected) {
+        elCpuName.textContent = '5600X';
+        elGpuName.textContent = '9070 XT';
+
         function mockCycle() {
           if (camConnected) return;
           renderData({
-            cpus: [{ temperature: 40 + Math.floor(Math.random() * 4) }],
-            gpus: [{ temperature: 56 + Math.floor(Math.random() * 4) }]
+            cpus: [{ temperature: 48 + Math.floor(Math.random() * 5), name: '5600X' }],
+            gpus: [{ temperature: 53 + Math.floor(Math.random() * 6), name: '9070 XT' }]
           });
         }
 
